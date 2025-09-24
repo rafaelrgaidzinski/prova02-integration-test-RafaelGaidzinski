@@ -14,7 +14,7 @@ describe('Fake Store', () => {
   afterAll(() => p.reporter.end());
 
   describe('users', () => {
-    it('new user', async () => {
+    it('Cadastra um novo usuário', async () => {
       userId = await p
         .spec()
         .post(`${baseUrl}/users`)
@@ -29,5 +29,36 @@ describe('Fake Store', () => {
         .returns('id');
       console.log(userId);
     });
-  });
+
+    it('Busca o novo usuário cadastrado', async () => {
+        await p
+          .spec()
+          .get(`${baseUrl}/users/${userId}`)
+          .expectStatus(StatusCodes.OK);
+    });
+
+    it('Atualiza o cadastro de um novo usuário', async () => {
+        await p
+          .spec()
+          .put(`${baseUrl}/users/${userId}`)
+          .withJson({
+            email: 'rafael@hotmail.com',
+            name: 'Rafael Ronsoni',
+            password: '1234',
+            role: 'admin',
+            avatar: 'https://www.photo.com.br/user'
+          })
+          .expectStatus(StatusCodes.OK)
+          .inspect();
+      });
+
+    it('Deleta um usuário', async () => {
+        await p
+          .spec()
+          .delete(`${baseUrl}/users/${userId}`)
+          .expectStatus(StatusCodes.OK)
+          .inspect();
+    });
+
+    });
 });
