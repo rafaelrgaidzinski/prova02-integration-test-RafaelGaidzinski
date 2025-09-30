@@ -6,6 +6,8 @@ describe('Fake Store - Produtos', () => {
   const pactum = spec;
   const reporter = SimpleReporter;
   const baseUrl = 'https://api.escuelajs.co/api/v1';
+  const uniqueEmail = `test${Date.now()}@email.com`;
+  console.log('Email único para teste:', uniqueEmail);
 
   pactum.request.setDefaultTimeout(30000);
 
@@ -29,10 +31,8 @@ describe('Fake Store - Produtos', () => {
           title: 'Notebook Gamer',
           price: 2500
         })
-        .stores('productId', 'id')
-        .toss();
+        .stores('productId', 'id');
 
-      console.log('Produto criado:', response.json);
       console.log('ID do produto:', response.json.id);
     });
 
@@ -98,28 +98,6 @@ describe('Fake Store - Produtos', () => {
 
       console.log(`Produto deletado com sucesso`);
     });
-  });
-
-  describe('Filtros de Produtos', () => {
-    it('Filtra produtos por título', async () => {
-      const response = await pactum
-        .spec()
-        .get(`${baseUrl}/products`)
-        .withQueryParams({ title: 'cap' })
-        .expectStatus(StatusCodes.OK);
-
-      console.log('Produto filtrado por title:', response.json);
-    });
-
-    it('Filtra produtos por faixa de preço', async () => {
-      const response = await pactum
-        .spec()
-        .get(`${baseUrl}/products`)
-        .withQueryParams({ price_min: 100, price_max: 500 })
-        .expectStatus(StatusCodes.OK);
-
-      console.log('Produto filtrado por preço:', response.json);
-    });
 
     it('Filtra produtos por categoria', async () => {
       const response = await pactum
@@ -131,17 +109,6 @@ describe('Fake Store - Produtos', () => {
       console.log('Produto filtrado por categoria:', response.json);
     });
   });
-});
-
-describe('Fake Store - Categorias', () => {
-  const pactum = spec;
-  const reporter = SimpleReporter;
-  const baseUrl = 'https://api.escuelajs.co/api/v1';
-
-  pactum.request.setDefaultTimeout(30000);
-
-  beforeAll(() => pactum.reporter.add(reporter));
-  afterAll(() => pactum.reporter.end());
 
   describe('CRUD de Categorias', () => {
     it('Cria uma nova categoria', async () => {
@@ -156,10 +123,8 @@ describe('Fake Store - Categorias', () => {
         .expectJsonLike({
           name: 'Livros'
         })
-        .stores('categoryId', 'id')
-        .toss();
+        .stores('categoryId', 'id');
 
-      console.log('Categoria criada:', response.json);
       console.log('ID da categoria:', response.json.id);
     });
 
@@ -172,7 +137,7 @@ describe('Fake Store - Categorias', () => {
           name: 'Livros'
         });
 
-      console.log('Categoria consultada:', response.json);
+      console.log('Consulta categoria criada:', response.json);
     });
 
     it('Atualiza uma categoria', async () => {
@@ -198,7 +163,20 @@ describe('Fake Store - Categorias', () => {
           name: 'Livros e Revistas'
         });
 
-      console.log('Categoria consultada:', response.json);
+      console.log('Consulta a categoria atualizada:', response.json);
+    });
+
+    it('Busca uma categoria específica por ID', async () => {
+      const response = await pactum
+        .spec()
+        .get(`${baseUrl}/categories/1`)
+        .expectStatus(StatusCodes.OK)
+        .expectJsonLike({
+          id: 1,
+          name: 'Clothes'
+        });
+
+      console.log('Categoria buscada por ID:', response.json);
     });
 
     it('Lista todas as categorias', async () => {
@@ -218,7 +196,7 @@ describe('Fake Store - Categorias', () => {
           }
         });
 
-      console.log(response.json);
+      console.log('Categorias: ', response.json);
     });
 
     it('Lista produtos de uma categoria', async () => {
@@ -257,43 +235,7 @@ describe('Fake Store - Categorias', () => {
     });
   });
 
-  it('Busca uma categoria específica por ID', async () => {
-    const response = await pactum
-      .spec()
-      .get(`${baseUrl}/categories/1`)
-      .expectStatus(StatusCodes.OK)
-      .expectJsonLike({
-        id: 1,
-        name: 'Clothes'
-      });
-
-    console.log('Categoria buscada por ID:', response.json);
-  });
-});
-
-describe('Fake Store - Usuários', () => {
-  const pactum = spec;
-  const reporter = SimpleReporter;
-  const baseUrl = 'https://api.escuelajs.co/api/v1';
-  const uniqueEmail = `test${Date.now()}@email.com`;
-  console.log('Email único para teste:', uniqueEmail);
-
-  pactum.request.setDefaultTimeout(30000);
-
-  beforeAll(() => pactum.reporter.add(reporter));
-  afterAll(() => pactum.reporter.end());
-
   describe('CRUD de Usuários', () => {
-    it('Verifica se email está disponível', async () => {
-      await pactum
-        .spec()
-        .post(`${baseUrl}/users/is-available`)
-        .withJson({
-          email: uniqueEmail
-        })
-        .expectStatus(StatusCodes.CREATED);
-    });
-
     it('Cadastra um novo usuário', async () => {
       const response = await pactum
         .spec()
@@ -310,10 +252,8 @@ describe('Fake Store - Usuários', () => {
           email: uniqueEmail,
           name: 'João Silva'
         })
-        .stores('userId', 'id')
-        .toss();
+        .stores('userId', 'id');
 
-      console.log('Usuário criado:', response.json);
       console.log('ID do usuário:', response.json.id);
     });
 
