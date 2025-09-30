@@ -7,7 +7,6 @@ describe('Fake Store - Produtos', () => {
   const reporter = SimpleReporter;
   const baseUrl = 'https://api.escuelajs.co/api/v1';
   const uniqueEmail = `test${Date.now()}@email.com`;
-  console.log('Email único para teste:', uniqueEmail);
 
   pactum.request.setDefaultTimeout(30000);
 
@@ -32,8 +31,6 @@ describe('Fake Store - Produtos', () => {
           price: 2500
         })
         .stores('productId', 'id');
-
-      console.log('ID do produto:', response.json.id);
     });
 
     it('Consulta o produto criado', async () => {
@@ -44,8 +41,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           title: 'Notebook Gamer'
         });
-
-      console.log('Consulta produto criado:', response.json);
     });
 
     it('Atualiza um produto existente', async () => {
@@ -74,8 +69,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           title: 'Notebook Gamer Pro'
         });
-
-      console.log('Consulta produto atualizado:', response.json);
     });
 
     it('Lista produtos com paginação', async () => {
@@ -85,18 +78,13 @@ describe('Fake Store - Produtos', () => {
         .withQueryParams({ offset: 0, limit: 10 })
         .expectStatus(StatusCodes.OK)
         .expectJsonLength(10);
-
-      console.log(response.json);
     });
 
     it('Deleta um produto', async () => {
       await pactum
         .spec()
         .delete(`${baseUrl}/products/$S{productId}`)
-        .expectStatus(StatusCodes.OK)
-        .toss();
-
-      console.log(`Produto deletado com sucesso`);
+        .expectStatus(StatusCodes.OK);
     });
 
     it('Filtra produtos por categoria', async () => {
@@ -105,8 +93,6 @@ describe('Fake Store - Produtos', () => {
         .get(`${baseUrl}/products`)
         .withQueryParams({ categoryId: 1 })
         .expectStatus(StatusCodes.OK);
-
-      console.log('Produto filtrado por categoria:', response.json);
     });
   });
 
@@ -124,8 +110,6 @@ describe('Fake Store - Produtos', () => {
           name: 'Livros'
         })
         .stores('categoryId', 'id');
-
-      console.log('ID da categoria:', response.json.id);
     });
 
     it('Consulta a categoria criada', async () => {
@@ -136,8 +120,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           name: 'Livros'
         });
-
-      console.log('Consulta categoria criada:', response.json);
     });
 
     it('Atualiza uma categoria', async () => {
@@ -162,8 +144,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           name: 'Livros e Revistas'
         });
-
-      console.log('Consulta a categoria atualizada:', response.json);
     });
 
     it('Busca uma categoria específica por ID', async () => {
@@ -175,8 +155,6 @@ describe('Fake Store - Produtos', () => {
           id: 1,
           name: 'Clothes'
         });
-
-      console.log('Categoria buscada por ID:', response.json);
     });
 
     it('Lista todas as categorias', async () => {
@@ -195,8 +173,6 @@ describe('Fake Store - Produtos', () => {
             }
           }
         });
-
-      console.log('Categorias: ', response.json);
     });
 
     it('Lista produtos de uma categoria', async () => {
@@ -220,18 +196,13 @@ describe('Fake Store - Produtos', () => {
             }
           }
         });
-
-      console.log('Produtos da categoria:', response.json);
     });
 
     it('Deleta uma categoria', async () => {
       await pactum
         .spec()
         .delete(`${baseUrl}/categories/$S{categoryId}`)
-        .expectStatus(StatusCodes.OK)
-        .toss();
-
-      console.log(`Categoria deletada com sucesso`);
+        .expectStatus(StatusCodes.OK);
     });
   });
 
@@ -253,8 +224,6 @@ describe('Fake Store - Produtos', () => {
           name: 'João Silva'
         })
         .stores('userId', 'id');
-
-      console.log('ID do usuário:', response.json.id);
     });
 
     it('Busca o usuário cadastrado por ID', async () => {
@@ -265,8 +234,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           email: uniqueEmail
         });
-
-      console.log('Consulta usuário criado:', response.json);
     });
 
     it('Atualiza dados do usuário', async () => {
@@ -294,8 +261,6 @@ describe('Fake Store - Produtos', () => {
         .expectJsonLike({
           name: 'João Pedro Silva'
         });
-
-      console.log('Consulta usuário atualizado:', response.json);
     });
 
     it('Lista todos os usuários', async () => {
@@ -321,10 +286,7 @@ describe('Fake Store - Produtos', () => {
       await pactum
         .spec()
         .delete(`${baseUrl}/users/$S{userId}`)
-        .expectStatus(StatusCodes.OK)
-        .toss();
-
-      console.log('Usuário deletado com sucesso');
+        .expectStatus(StatusCodes.OK);
     });
   });
 });
